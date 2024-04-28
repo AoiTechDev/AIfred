@@ -42,8 +42,11 @@ export function DatePicker() {
         <PopoverTrigger asChild className="">
           <Button>Add Event</Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-6" align="center">
-          <AddEventContent/>
+        <PopoverContent
+          className="w-auto p-6 max-h-[460px] overflow-auto"
+          align="center"
+        >
+          <AddEventContent />
         </PopoverContent>
       </Popover>
     </div>

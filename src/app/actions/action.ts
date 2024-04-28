@@ -1,11 +1,11 @@
 "use server";
 
 import { convertTimeToDate } from "@/lib/utils";
+import getTodayDateAsString from "@/utils/getTodayDateAsString";
 
 import { OauthAccessToken, auth, clerkClient } from "@clerk/nextjs/server";
-import { Day } from "date-fns";
-import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
+
 export const createCalendarEvent = async () => {
   try {
     const { userId } = auth();
@@ -32,16 +32,16 @@ export const createCalendarEvent = async () => {
 
 export const insertNewCalendarEvent = async ({
   description,
-  day,
   start,
   end,
 }: {
   description: string;
-  day: string;
   start: string;
   end: string;
 }) => {
   try {
+    console.log(description, start, end);
+
     const { userId } = auth();
 
     const user = await clerkClient.users.getUserOauthAccessToken(
@@ -51,7 +51,7 @@ export const insertNewCalendarEvent = async ({
 
     const cal = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events/quickAdd?text=${encodeURIComponent(
-        `${description} at ${day} on ${start} - ${end}`
+        `${description} on ${start} - ${end}`
       )}`,
       {
         method: "POST",
@@ -128,13 +128,17 @@ export const updateEvent = async (
     );
 
     revalidatePath("/dashboard");
-    return;
+    return req.json();
   } catch (err) {
     console.error(err);
   }
 };
 
-export const addEvent = async (date: Date | undefined, priority: string | null, formData: FormData) => {
+export const addEvent = async (
+  date: Date | undefined,
+  priority: string | null,
+  formData: FormData
+) => {
   try {
     const { userId } = auth();
 
@@ -180,6 +184,32 @@ export const addEvent = async (date: Date | undefined, priority: string | null, 
         }),
       }
     );
+    revalidatePath("/dashboard");
+    return;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const listAllEvents = async () => {
+  try {
+    const { userId } = auth();
+
+    const user = await clerkClient.users.getUserOauthAccessToken(
+      userId!,
+      "oauth_google"
+    );
+
+    await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + user[0].token, // Access token for google
+        },
+      }
+    );
+
     revalidatePath("/dashboard");
     return;
   } catch (err) {

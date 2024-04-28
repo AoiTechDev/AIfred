@@ -6,14 +6,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-import { updateEvent } from "@/app/actions/action";
+import { deleteEvent, updateEvent } from "@/app/actions/action";
 
 import SaveButton from "@/components/SaveButton";
 import { importantArr } from "@/constants/constants";
+import DeleteButton from "@/components/DeleteButton";
+import { toast } from "react-toastify";
 
 const Options = () => {
   const prioritiesRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const { event } = useCurrentEventStore();
+  const { event, setCurrentEvent } = useCurrentEventStore();
 
   const [newFromValue, setNewFromValue] = useState(dayjs(event.start));
   const [newToValue, setNewToValue] = useState(dayjs(event.end));
@@ -32,24 +34,34 @@ const Options = () => {
         const prio = JSON.parse(event.description);
         for (let i = 0; i < prioritiesRefs.current.length; i++) {
           if (prioritiesRefs.current[i]?.innerText === prio?.priority) {
-            prioritiesRefs.current[i]!.style.backgroundColor = importantArr[i].color;
+            prioritiesRefs.current[i]!.style.backgroundColor =
+              importantArr[i].color;
           }
         }
       } catch (error) {
-        console.error('Error parsing JSON:', error);
+        console.error("Error parsing JSON:", error);
         // Handle the error gracefully
       }
     }
   }, [event]);
   const [priority, setPriority] = useState<string | null>(null);
-  const handleSubmitForm = updateEvent.bind(null, event, priority);
+  const handleSubmitForm = () => {
+    updateEvent.bind(null, event, priority);
+    toast.success("Updated successfully!");
+  };
+  const handleDeleteEvent = (eventId: string) => {
+    deleteEvent(eventId);
+    event.name = "";
+    toast.success("Deleted successfully!");
+  };
 
   const handleSelectPriority = (value: string, index: number) => {
     for (let i = 0; i < prioritiesRefs.current.length; i++) {
       prioritiesRefs.current[i]!.style.backgroundColor = "white";
     }
 
-    prioritiesRefs.current[index]!.style.backgroundColor = importantArr[index].color;
+    prioritiesRefs.current[index]!.style.backgroundColor =
+      importantArr[index].color;
 
     setPriority(value);
   };
@@ -75,9 +87,8 @@ const Options = () => {
               />
               <div className="space-y-4">
                 <div className="flex justify-between">
-                  <p>From:</p>
                   <TimePicker
-                    label="Basic time picker"
+                    label="From"
                     value={newFromValue}
                     onChange={(newValue) => setNewFromValue(dayjs(newValue))}
                     ampm={false}
@@ -85,9 +96,8 @@ const Options = () => {
                   />
                 </div>
                 <div className="flex justify-between">
-                  <p>To:</p>
                   <TimePicker
-                    label="Basic time picker"
+                    label="To"
                     value={newToValue}
                     onChange={(newValue) => setNewToValue(dayjs(newValue))}
                     ampm={false}
@@ -102,13 +112,20 @@ const Options = () => {
                     className={` p-2 rounded-lg border-2  cursor-pointer`}
                     key={index}
                     onClick={() => handleSelectPriority(item.label, index)}
-                    ref={(el) => (prioritiesRefs.current[index] = el)}
+                    ref={(el) => {
+                      prioritiesRefs.current[index] = el;
+                    }}
                   >
                     {item.label}
                   </div>
                 ))}
               </div>
-              <SaveButton />
+              <div className="flex gap-4">
+                <SaveButton />
+                <DeleteButton
+                  onClick={() => handleDeleteEvent(event.eventId)}
+                />
+              </div>
             </div>
           ) : null}
         </form>

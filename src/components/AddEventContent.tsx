@@ -23,7 +23,8 @@ const AddEventContent = () => {
       prioritiesRefs.current[i]!.style.backgroundColor = "white";
     }
 
-    prioritiesRefs.current[index]!.style.backgroundColor = importantArr[index].color;
+    prioritiesRefs.current[index]!.style.backgroundColor =
+      importantArr[index].color;
 
     setPriority(value);
   };
@@ -31,7 +32,7 @@ const AddEventContent = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <form action={actionHanlder} className="space-y-6">
+      <form action={actionHanlder} className="space-y-6 overflow-y-auto">
         <div>
           <FormLabel>Event name: </FormLabel>
           <Input
@@ -67,12 +68,13 @@ const AddEventContent = () => {
           {importantArr.map((item, index) => (
             <div
               style={{
-                border: `solid ${item.color} 2px`
-                
+                border: `solid ${item.color} 2px`,
               }}
               className="p-2 rounded-lg border-2  cursor-pointer"
               key={index}
-              ref={(el) => (prioritiesRefs.current[index] = el)}
+              ref={(el) => {
+                prioritiesRefs.current[index] = el;
+              }}
               onClick={() => handleSelectPriority(item.label, index)}
             >
               {item.label}

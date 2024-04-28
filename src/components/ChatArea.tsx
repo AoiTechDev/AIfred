@@ -4,7 +4,7 @@ import { useCurrentDayAllEventsStore } from "@/store/store";
 import { Message, useAssistant } from "ai/react";
 import Image from "next/image";
 import { useEffect } from "react";
-import logo from '@/assets/logo.png'
+import logo from "@/assets/logo.png";
 const roleToColorMap: Record<Message["role"], string> = {
   system: "red",
   user: "black",
@@ -35,13 +35,14 @@ export default function ChatArea({ avatar }: { avatar: string | undefined }) {
     setMessages([
       {
         id: "unique-id", // Replace with a unique ID
-        content: "Good day, your highness. I am Aifred, your dedicated AI valet, humbly at your disposal. How may I be of service to you today?",
+        content:
+          "Good day, sir! I am AIfred, your dedicated AI valet. How may I be of service to you today?",
         role: "assistant", // Or any other valid role
       },
     ]);
   }, []);
 
-  console.log(currentEvents)
+
   return (
     <>
       <div className="h-full border-2  rounded-lg overflow-y-auto">

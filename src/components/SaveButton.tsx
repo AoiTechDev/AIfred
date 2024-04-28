@@ -1,12 +1,14 @@
-import React from 'react'
-import { Button } from './ui/button'
-import { useFormStatus } from 'react-dom'
+import React from "react";
+import { Button } from "./ui/button";
+import { useFormStatus } from "react-dom";
 
 const SaveButton = () => {
-    const status = useFormStatus()
+  const status = useFormStatus();
   return (
-    <Button disabled={status.pending}>{status.pending ? "Saving..." : "Save"}</Button>
-  )
-}
+    <Button disabled={status.pending}>
+      {status.pending ? "Saving..." : "Save"}
+    </Button>
+  );
+};
 
-export default SaveButton
+export default SaveButton;
