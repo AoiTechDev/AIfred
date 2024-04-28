@@ -149,11 +149,11 @@ export const addEvent = async (date: Date | undefined, priority: string | null, 
     const toTime = convertTimeToDate(formData.get("toTime"), date!);
 
    const day1 = new Date(fromTime)
-    const newDay1 = day1.setDate(day1.getDate()-1)
+    const newDay1 = day1.setDate(day1.getDate()+1)
     const test1 = new Date(newDay1)
    
-    const day2 = new Date(fromTime)
-    const newDay2 = day2.setDate(day2.getDate()-1)
+    const day2 = new Date(toTime)
+    const newDay2 = day2.setDate(day2.getDate()+1)
     const test2 = new Date(newDay2)
    
 
