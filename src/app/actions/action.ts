@@ -151,11 +151,13 @@ export const addEvent = async (date: Date | undefined, priority: string | null, 
    const day1 = new Date(fromTime)
     const newDay1 = day1.setDate(day1.getDate())
     const test1 = new Date(newDay1)
-   
+    const newHour1 = test1.setHours(test1.getHours()-1)
+
+
     const day2 = new Date(toTime)
     const newDay2 = day2.setDate(day2.getDate())
     const test2 = new Date(newDay2)
-   
+   const newHour2 = test2.setHours(test2.getHours()-1)
 
     const cal = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
@@ -167,10 +169,10 @@ export const addEvent = async (date: Date | undefined, priority: string | null, 
 
         body: JSON.stringify({
           start: {
-            dateTime: test1,
+            dateTime: newHour1,
           },
           end: {
-            dateTime: test2,
+            dateTime: newHour2,
           },
           summary: eventName,
           description: JSON.stringify({ priority: priority }),
