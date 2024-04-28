@@ -89,7 +89,7 @@ export const updateEvent = async (
     const hoursFrom = Number(timeFrom?.slice(0, -3));
     const minutesFrom = Number(timeFrom?.slice(-2));
 
-    const dateFrom = new Date(event.start);
+    const dateFrom = new Date(event.start)
     dateFrom.setHours(hoursFrom, minutesFrom, 0, 0);
 
     dateFrom.setUTCHours(dateFrom.getUTCHours());
@@ -144,9 +144,18 @@ export const addEvent = async (date: Date | undefined, priority: string | null, 
     );
 
     const eventName = formData.get("eventName");
-
+  
     const fromTime = convertTimeToDate(formData.get("fromTime"), date!);
     const toTime = convertTimeToDate(formData.get("toTime"), date!);
+
+   const day1 = new Date(fromTime)
+    const newDay1 = day1.setDate(day1.getDate()-1)
+    const test1 = new Date(newDay1)
+   
+    const day2 = new Date(fromTime)
+    const newDay2 = day2.setDate(day2.getDate()-1)
+    const test2 = new Date(newDay2)
+   
 
     const cal = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
@@ -158,10 +167,10 @@ export const addEvent = async (date: Date | undefined, priority: string | null, 
 
         body: JSON.stringify({
           start: {
-            dateTime: fromTime,
+            dateTime: test1,
           },
           end: {
-            dateTime: toTime,
+            dateTime: test2,
           },
           summary: eventName,
           description: JSON.stringify({ priority: priority }),

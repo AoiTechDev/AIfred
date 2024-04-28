@@ -71,6 +71,8 @@ const Calendar = ({
     setDayEvents(tmp);
   }, [date, kalendarz?.items]);
 
+
+
   return (
     <div className="max-h-[400px] lg:max-h-full space-y-4 overflow-y-auto lg:h-[90%] ">
       {dayEvents.map((day, index) => (

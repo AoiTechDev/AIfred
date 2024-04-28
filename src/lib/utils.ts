@@ -12,11 +12,15 @@ export function formattedDate(date: Date | undefined) {
 
   return formattedDate;
 }
-
+function convertDateToUTC(date: Date) { 
+  return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()); 
+}
 export function convertTimeToDate(
   time: FormDataEntryValue | null,
   currentDate: Date
 ) {
+
+
   const hours = Number(time?.slice(0, -3));
   const minutes = Number(time?.slice(-2));
 
@@ -26,6 +30,6 @@ export function convertTimeToDate(
   date.setUTCHours(date.getUTCHours());
   const isoFormattedTimeTo = date.toISOString();
 
-  console.log(isoFormattedTimeTo)
+  console.log(convertDateToUTC(date))
   return isoFormattedTimeTo;
 }

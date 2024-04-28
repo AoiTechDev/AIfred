@@ -8,7 +8,7 @@ export const importantArr = [
       color: "#fed7aa"
     },
     {
-      label: "Important but  not urgent",
+      label: "Important but not urgent",
       color: "#fef08a"
     },
     {
