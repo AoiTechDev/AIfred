@@ -6,7 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-import { deleteEvent, updateEvent } from "@/app/actions/action";
+import {  deleteEvent, updateEvent } from "@/app/actions/action";
 
 import SaveButton from "@/components/SaveButton";
 import { importantArr } from "@/constants/constants";
@@ -45,10 +45,13 @@ const Options = () => {
     }
   }, [event]);
   const [priority, setPriority] = useState<string | null>(null);
-  const handleSubmitForm = () => {
-    updateEvent.bind(null, event, priority);
-    toast.success("Updated successfully!");
-  };
+  // const handleSubmitForm = () => {
+  //   updateEvent.bind(null, event, priority);
+  //   toast.success("Updated successfully!");
+  // };
+
+  const handleSubmitForm = updateEvent.bind(null, event, priority);
+
   const handleDeleteEvent = (eventId: string) => {
     deleteEvent(eventId);
     event.name = "";
@@ -75,7 +78,13 @@ const Options = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="order-2 lg:order-3 w-full lg:max-w-[350px] border-2 rounded-lg border-gray-200 overflow-y-auto">
-        <form action={handleSubmitForm} className=" p-4 space-y-4 ">
+        <form
+          action={(data) => {
+            handleSubmitForm(data)
+            .then(() => toast.success("Updated successfully!"))
+          }}
+          className=" p-4 space-y-4 "
+        >
           {event.name !== "" ? (
             <div className="space-y-4">
               {" "}

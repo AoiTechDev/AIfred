@@ -89,7 +89,7 @@ export const updateEvent = async (
     const hoursFrom = Number(timeFrom?.slice(0, -3));
     const minutesFrom = Number(timeFrom?.slice(-2));
 
-    const dateFrom = new Date(event.start)
+    const dateFrom = new Date(event.start);
     dateFrom.setHours(hoursFrom, minutesFrom, 0, 0);
 
     dateFrom.setUTCHours(dateFrom.getUTCHours());
@@ -148,22 +148,20 @@ export const addEvent = async (
     );
 
     const eventName = formData.get("eventName");
-  
+
     const fromTime = convertTimeToDate(formData.get("fromTime"), date!);
     const toTime = convertTimeToDate(formData.get("toTime"), date!);
 
-   const day1 = new Date(fromTime)
-    const newDay1 = day1.setDate(day1.getDate())
-    const test1 = new Date(newDay1)
-    const newHour1 = test1.setHours(test1.getHours()-2)
+    const day1 = new Date(fromTime);
+    const newDay1 = day1.setDate(day1.getDate());
+    const test1 = new Date(newDay1);
+    const newHour1 = test1.setHours(test1.getHours() - 2);
 
+    const day2 = new Date(toTime);
+    const newDay2 = day2.setDate(day2.getDate());
+    const test2 = new Date(newDay2);
+    const newHour2 = test2.setHours(test2.getHours() - 2);
 
-    const day2 = new Date(toTime)
-    const newDay2 = day2.setDate(day2.getDate())
-    const test2 = new Date(newDay2)
-   const newHour2 = test2.setHours(test2.getHours()-2)
-
-   
     const cal = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events`,
       {
@@ -184,6 +182,32 @@ export const addEvent = async (
         }),
       }
     );
+    revalidatePath("/dashboard");
+    return;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const deleteEvent = async (eventId: string) => {
+  try {
+    const { userId } = auth();
+
+    const user = await clerkClient.users.getUserOauthAccessToken(
+      userId!,
+      "oauth_google"
+    );
+
+    await fetch(
+      `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + user[0].token, // Access token for google
+        },
+      }
+    );
+
     revalidatePath("/dashboard");
     return;
   } catch (err) {
